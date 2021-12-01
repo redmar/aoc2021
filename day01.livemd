@@ -1,0 +1,42 @@
+# AoC2021 Day1
+
+## Part1
+
+```elixir
+File.cd!('/livebook_data/aoc2021/inputs')
+input = File.read!('day1.txt')
+```
+
+```elixir
+File.cd!('/livebook_data/aoc2021/inputs')
+raw_input = File.read!('day1.txt')
+# IO.inspect raw_input
+
+cleaned_input =
+  raw_input
+  |> String.split("\n")
+  |> Enum.reject(fn x -> x == "" end)
+  |> Enum.map(&String.to_integer/1)
+
+# IO.inspect cleaned_input
+
+# --- part 1
+
+part1 =
+  cleaned_input
+  |> Enum.chunk_every(2, 1, :discard)
+  |> Enum.count(fn [prev, next] -> next > prev end)
+
+IO.puts("solution part 1 = #{part1}")
+
+# --- part 2
+
+part2 =
+  cleaned_input
+  |> Enum.chunk_every(3, 1, :discard)
+  |> Enum.map(&Enum.sum/1)
+  |> Enum.chunk_every(2, 1, :discard)
+  |> Enum.count(fn [prev, next] -> next > prev end)
+
+IO.puts("solution part 2 = #{part2}")
+```
