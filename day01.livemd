@@ -3,15 +3,22 @@
 ## Part1
 
 ```elixir
-File.cd!('/livebook_data/aoc2021/inputs')
-input = File.read!('day1.txt')
+Mix.install([
+  {:httpoison, "~> 1.8"},
+  {:jason, "~> 1.2"}
+])
 ```
 
 ```elixir
-File.cd!('/livebook_data/aoc2021/inputs')
-raw_input = File.read!('day1.txt')
-# IO.inspect raw_input
+HTTPoison.start()
 
+%HTTPoison.Response{status_code: 200, body: raw_input} =
+  HTTPoison.get!("https://raw.githubusercontent.com/redmar/aoc2021/main/inputs/day1.txt")
+
+:ok
+```
+
+```elixir
 cleaned_input =
   raw_input
   |> String.split("\n")
