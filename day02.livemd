@@ -1,0 +1,68 @@
+# AoC2021 Day2
+
+## Data downloading & cleaning
+
+```elixir
+Mix.install([
+  {:httpoison, "~> 1.8"},
+  {:jason, "~> 1.2"}
+])
+```
+
+```elixir
+HTTPoison.start()
+
+%HTTPoison.Response{status_code: 200, body: raw_input} =
+  HTTPoison.get!("https://raw.githubusercontent.com/redmar/aoc2021/main/inputs/day2.txt")
+
+:ok
+```
+
+```elixir
+cleaned_input =
+  raw_input
+  |> String.split("\n")
+  |> Enum.reject(fn x -> x == "" end)
+  |> Enum.map(fn line -> String.split(line, " ") end)
+  |> Enum.map(fn [direction, units] -> [direction, String.to_integer(units)] end)
+
+IO.inspect(cleaned_input)
+```
+
+## Part1
+
+```elixir
+# --- part 1
+part1_calculation =
+  Enum.reduce(cleaned_input, %{horizontal: 0, depth: 0}, fn
+    ["forward", amount], %{horizontal: horizontal} = acc ->
+      %{acc | horizontal: horizontal + amount}
+
+    ["up", amount], %{depth: depth} = acc ->
+      %{acc | depth: depth - amount}
+
+    ["down", amount], %{depth: depth} = acc ->
+      %{acc | depth: depth + amount}
+  end)
+
+IO.puts("solution part 1 = #{part1_calculation[:horizontal] * part1_calculation[:depth]}")
+```
+
+## Part2
+
+```elixir
+# --- part 2
+part2_calculation =
+  Enum.reduce(cleaned_input, %{horizontal: 0, depth: 0, aim: 0}, fn
+    ["forward", amount], %{horizontal: horizontal, depth: depth, aim: aim} = acc ->
+      %{acc | horizontal: horizontal + amount, depth: depth + aim * amount}
+
+    ["up", amount], %{aim: aim} = acc ->
+      %{acc | aim: aim - amount}
+
+    ["down", amount], %{aim: aim} = acc ->
+      %{acc | aim: aim + amount}
+  end)
+
+IO.puts("solution part 2 = #{part2_calculation[:horizontal] * part2_calculation[:depth]}")
+```
